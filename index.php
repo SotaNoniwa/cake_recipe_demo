@@ -14,7 +14,7 @@
 // Read the contents of recipes.txt
 $recipesContent = file_get_contents('ZH CAKE BOOK/recipes.txt');
 
-// Split the content into an array based on # character
+// Split the content into array based on type of cakes
 $recipes = explode("#", $recipesContent);
 
 // Remove the first empty element
@@ -29,7 +29,8 @@ foreach ($recipes as $recipe) {
     $lines = explode("\n", $recipe);
 
     // Extract cake name (first line starting from # character)
-    $cakeName = trim($lines[0]);
+    // no need trim() # character as we already used explode() with it
+    $cakeName = $lines[0];
 
     // Extract image file name (line starting with *)
     $imageFileName = trim($lines[1], "*");
@@ -37,7 +38,7 @@ foreach ($recipes as $recipe) {
     // Extract recipe description (starting from the third line)
     $recipeDescription = implode("\n", array_slice($lines, 2));
 
-    // Store the cake name, image file name, and recipe description in the associative array
+    // Store the cake name, image file name, and recipe description in the associative array (or map)
     $cakeData[$cakeName] = array(
         'image' => $imageFileName,
         'recipe' => $recipeDescription
@@ -48,7 +49,7 @@ foreach ($recipes as $recipe) {
 if (isset($_POST['cake'])) {
     $selectedCake = $_POST['cake'];
     // Display the selected cake's recipe and image
-    echo '<h2>' . htmlentities($selectedCake) . '</h2>';
+    echo "<h2>$selectedCake</h2>";
     // Explode the recipe into steps and display each step on a new line
     $steps = explode("Step", $cakeData[$selectedCake]['recipe']);
     foreach ($steps as $step) {
@@ -67,7 +68,7 @@ if (isset($_POST['cake'])) {
         <?php
         // Populate the dropdown menu with cake names
         foreach (array_keys($cakeData) as $cakeName) {
-            echo '<option value="' . htmlentities($cakeName) . '">' . htmlentities($cakeName) . '</option>';
+            echo '<option value="' . "$cakeName" . '">' . "$cakeName" . '</option>';
         }
         ?>
     </select>
